@@ -1,10 +1,10 @@
-package com.kakao.billing_homework;
+package com.kakao.batchapp;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class BillingHomeworkApplicationTests {
+class BatchAppApplicationTests {
 
 	@Test
 	void contextLoads() {
