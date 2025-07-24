@@ -15,7 +15,8 @@ public abstract class TestContainerConfig {
             new MySQLContainer<>("mysql:8.0")
                     .withDatabaseName("testdb")
                     .withUsername("test")
-                    .withPassword("test");
+                    .withPassword("test")
+                    .withReuse(false);;
 
     @DynamicPropertySource
     static void mysqlProperties(DynamicPropertyRegistry registry) {
