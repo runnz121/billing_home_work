@@ -1,3 +1,7 @@
+DROP TABLE IF EXISTS song;
+DROP TABLE IF EXISTS album;
+DROP TABLE IF EXISTS artists;
+
 CREATE TABLE artists (
     id         BIGINT       AUTO_INCREMENT PRIMARY KEY,
     name       VARCHAR(2000) NOT NULL,

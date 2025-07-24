@@ -12,3 +12,12 @@ spring:
   batch:
     jdbc:
       initialize-schema: always
+
+batch:
+  resource:
+    location: classpath:/spotifyDataset-test.json
+
+logging:
+  level:
+    com.zaxxer.hikari.HikariConfig: DEBUG
+    org.springframework.jdbc.datasource: DEBUG
