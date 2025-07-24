@@ -14,3 +14,7 @@ spring:
     jdbc-url: jdbc:mysql://localhost:3306/kakao?autoReconnect=true
     username: root
     password: 698427
+
+batch:
+  resource:
+    location: classpath:/spotifyDataset.json
