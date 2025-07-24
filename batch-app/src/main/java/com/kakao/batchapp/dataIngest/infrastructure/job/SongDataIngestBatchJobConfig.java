@@ -1,5 +1,6 @@
 package com.kakao.batchapp.dataIngest.infrastructure.job;
 
+import com.kakao.batchapp.dataIngest.config.BatchResourceProperties;
 import com.kakao.batchapp.dataIngest.domain.MusicData;
 import com.kakao.batchapp.dataIngest.domain.entity.Album;
 import com.kakao.batchapp.dataIngest.domain.entity.Artist;
@@ -23,7 +24,8 @@ import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.builder.FlatFileItemReaderBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.util.StringUtils;
 
@@ -39,7 +41,6 @@ public class SongDataIngestBatchJobConfig {
     private static final String ARTISTS_STEP = "artistStep";
     private static final String ALBUM_STEP = "albumStep";
     private static final String SONG_STEP = "songStep";
-    private static final String RESOURCE_NAME = "spotifyDataset.json";
 
     @Bean
     public Job musicDataIngestJob(JobRepository jobRepository,
@@ -60,11 +61,14 @@ public class SongDataIngestBatchJobConfig {
      */
     @Bean
     @StepScope
-    public FlatFileItemReader<MusicData> ndJsonMusicDataReader() {
+    public FlatFileItemReader<MusicData> ndJsonMusicDataReader(
+            BatchResourceProperties properties,
+            ResourceLoader resourceLoader) {
 
+        Resource resource = resourceLoader.getResource(properties.getLocation());
         return new FlatFileItemReaderBuilder<MusicData>()
                 .name(ND_JSON_READER)
-                .resource(new ClassPathResource(RESOURCE_NAME))
+                .resource(resource)
                 .lineMapper(new JsonCustomLineMapper())
                 .build();
     }
