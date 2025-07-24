@@ -13,11 +13,8 @@ public class JsonCustomLineMapper implements LineMapper<MusicData> {
     public MusicData mapLine(String line, int lineNumber) throws Exception {
 
         String prepped = line.replace("\\/", SLASH_PLACEHOLDER);
-
-        // jackson 파싱
         MusicData data = objectMapper.readValue(prepped, MusicData.class);
 
-        // POJO 필드에 담긴 토큰만 다시 \/ 로 복원
         if (data.getSong() != null) {
             data.setSong(data.getSong().replace(SLASH_PLACEHOLDER, "\\/"));
         }
