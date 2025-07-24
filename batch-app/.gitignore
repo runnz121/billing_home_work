@@ -35,3 +35,6 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### resource/.json 파일은 업로드 안하도록 설정
+/src/main/resources/**/*.json
