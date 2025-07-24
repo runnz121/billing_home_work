@@ -1,4 +1,4 @@
-package com.kakao.batchapp.dataIngest.domain.model.entity;
+package com.kakao.batchapp.dataIngest.domain.entity;
 
 import lombok.*;
 

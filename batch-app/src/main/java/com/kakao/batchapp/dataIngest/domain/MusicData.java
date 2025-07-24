@@ -1,4 +1,4 @@
-package com.kakao.batchapp.dataIngest.domain.model;
+package com.kakao.batchapp.dataIngest.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
