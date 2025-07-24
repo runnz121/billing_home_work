@@ -1,7 +1,7 @@
 package com.kakao.batchapp.dataIngest.mapper;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.kakao.batchapp.dataIngest.domain.model.MusicData;
+import com.kakao.batchapp.dataIngest.domain.MusicData;
 import org.springframework.batch.item.file.LineMapper;
 
 public class JsonCustomLineMapper implements LineMapper<MusicData> {
