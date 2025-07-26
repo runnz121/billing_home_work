@@ -4,7 +4,6 @@ import com.music.apiservice.controller.response.AlbumCountResponse;
 import com.music.apiservice.service.MusicService;
 import com.music.apiservice.testUtils.TestUtils;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.http.MediaType;
@@ -13,6 +12,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
 
 
 @WebFluxTest(controllers = MusicController.class)
@@ -35,7 +35,7 @@ class MusicControllerTest {
 
         AlbumCountResponse response = TestUtils.fileToObject("data/album-counts-ok.json", AlbumCountResponse.class);
 
-        Mockito.when(musicService.getAlbumCounts(year, artistId, limit, offset))
+        when(musicService.getAlbumCounts(year, artistId, limit, offset))
                 .thenReturn(Mono.just(response));
 
         webClient.get()
@@ -57,5 +57,35 @@ class MusicControllerTest {
                     assertThat(res.content().size()).isEqualTo(5);
                     assertThat(res.page()).isNotNull();
                 });
+    }
+
+    @Test
+    void 노래별_좋아요증가_API_호출_성공() {
+        Long userId = 123L;
+        Long songId = 456L;
+
+        when(musicService.likeSong(userId, songId)).thenReturn(Mono.empty());
+
+        webClient.post()
+                .uri("/api/users/{userId}/songs/{songId}/like", userId, songId)
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus().isNoContent()
+                .expectBody().isEmpty();
+    }
+
+    @Test
+    void 노래별_좋아요이미존재시_에러발생한다() {
+        Long userId = 123L;
+        Long songId = 456L;
+
+        when(musicService.likeSong(userId, songId))
+                .thenReturn(Mono.error(new RuntimeException("이미 좋아요 한 노래입니다")));
+
+        webClient.post()
+                .uri("/api/users/{userId}/songs/{songId}/like", userId, songId)
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus().is5xxServerError();
     }
 }
