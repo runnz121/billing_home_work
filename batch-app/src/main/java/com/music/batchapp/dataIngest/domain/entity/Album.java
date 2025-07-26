@@ -19,4 +19,6 @@ public class Album {
     private String titleHash;
 
     private LocalDate releaseDate;
+
+    private Integer releaseYear;
 }
