@@ -44,7 +44,8 @@ public class MusicService {
                 });
     }
 
-    public Mono<Void> likeSong(Long userId, Long songId) {
+    public Mono<Void> likeSong(Long userId,
+                               Long songId) {
 
         return transactionalOperator.execute(status ->
                         userSongLikeRepository

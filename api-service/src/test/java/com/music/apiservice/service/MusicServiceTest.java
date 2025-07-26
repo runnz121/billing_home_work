@@ -1,18 +1,27 @@
 package com.music.apiservice.service;
 
 import com.music.apiservice.controller.response.AlbumCountResponse;
+import com.music.apiservice.exception.CustomException;
+import com.music.apiservice.exception.error.LikeError;
 import com.music.apiservice.model.dto.YearArtistsCountDto;
 import com.music.apiservice.repository.AlbumRepository;
+import com.music.apiservice.repository.SongRepository;
+import com.music.apiservice.repository.UserSongLikeRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.dao.DuplicateKeyException;
+import org.springframework.transaction.reactive.TransactionCallback;
+import org.springframework.transaction.reactive.TransactionalOperator;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
 
 
@@ -21,6 +30,15 @@ class MusicServiceTest {
 
     @Mock
     private AlbumRepository albumRepository;
+
+    @Mock
+    private UserSongLikeRepository userSongLikeRepository;
+
+    @Mock
+    private SongRepository songRepository;
+
+    @Mock
+    private TransactionalOperator transactionalOperator;
 
     @InjectMocks
     private MusicService musicService;
@@ -110,5 +128,35 @@ class MusicServiceTest {
                     assertThat(resp.page().pageSize()).isEqualTo(5);
                 })
                 .verifyComplete();
+    }
+
+    @Test
+    void 좋아요가_성공하면_빈_완료가_반환된다() {
+
+        Long userId = 1L;
+        Long songId = 2L;
+
+        doReturn(Flux.just(1L))
+                .when(transactionalOperator)
+                .execute(any(TransactionCallback.class));
+
+        StepVerifier.create(musicService.likeSong(userId, songId))
+                .verifyComplete();
+    }
+
+    @Test
+    void 이미_좋아요된_경우_CustomException_발생() {
+
+        doReturn(Flux.error(new DuplicateKeyException("dup")))
+                .when(transactionalOperator)
+                .execute(any(TransactionCallback.class));
+
+        StepVerifier.create(musicService.likeSong(1L, 2L))
+                .expectErrorSatisfies(ex -> {
+                    assertThat(ex).isInstanceOf(CustomException.class);
+                    assertThat(((CustomException) ex).getCode())
+                            .isEqualTo(LikeError.ALREADY_LIKE_ERROR);
+                })
+                .verify();
     }
 }
