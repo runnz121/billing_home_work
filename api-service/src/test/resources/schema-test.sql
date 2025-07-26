@@ -27,6 +27,15 @@ CREATE TABLE song (
     album_id   BIGINT       NOT NULL,
     title      VARCHAR(2000),
     title_hash CHAR(32),
+    like_count    BIGINT             NOT NULL DEFAULT 0,
     CONSTRAINT uq_song_album_title UNIQUE (album_id, title_hash),
     CONSTRAINT fk_song_album FOREIGN KEY (album_id) REFERENCES album(id)
+);
+
+-- user_song_like 테이블
+CREATE TABLE user_song_like (
+    id         BIGINT     NOT NULL AUTO_INCREMENT,
+    user_id    BIGINT     NOT NULL,
+    song_id    BIGINT     NOT NULL,
+    liked_at   TIMESTAMP  NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
