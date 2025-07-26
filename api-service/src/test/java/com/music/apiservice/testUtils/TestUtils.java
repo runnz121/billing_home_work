@@ -1,4 +1,4 @@
-package com.testUtils;
+package com.music.apiservice.testUtils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
