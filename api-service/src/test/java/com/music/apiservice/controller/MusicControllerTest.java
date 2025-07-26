@@ -2,7 +2,7 @@ package com.music.apiservice.controller;
 
 import com.music.apiservice.controller.response.AlbumCountResponse;
 import com.music.apiservice.service.MusicService;
-import com.testUtils.TestUtils;
+import com.music.apiservice.testUtils.TestUtils;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
