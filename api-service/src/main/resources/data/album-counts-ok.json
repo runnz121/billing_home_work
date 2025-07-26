@@ -1,0 +1,38 @@
+{
+  "year": null,
+  "artistId": null,
+  "content": [
+    {
+      "artistId": 474243,
+      "artistName": "Vybz Kartel",
+      "albumCounts": 212
+    },
+    {
+      "artistId": 365597,
+      "artistName": "Russ",
+      "albumCounts": 125
+    },
+    {
+      "artistId": 305808,
+      "artistName": "NEFFEX",
+      "albumCounts": 111
+    },
+    {
+      "artistId": 326829,
+      "artistName": "Party Tyme",
+      "albumCounts": 104
+    },
+    {
+      "artistId": 99198,
+      "artistName": "Dan Bull",
+      "albumCounts": 99
+    }
+  ],
+  "page": {
+    "totalElements": 127162,
+    "totalPages": 25433,
+    "currentPage": 0,
+    "pageSize": 5,
+    "isLast": false
+  }
+}
