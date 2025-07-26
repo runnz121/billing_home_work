@@ -2,10 +2,12 @@ package com.music.apiservice.controller;
 
 import com.music.apiservice.annotation.Description;
 import com.music.apiservice.controller.response.AlbumCountResponse;
+import com.music.apiservice.model.dto.SongLikeCountDto;
 import com.music.apiservice.service.MusicService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @RestController
@@ -34,5 +36,12 @@ public class MusicController {
 
         return musicService.likeSong(userId, songId)
                 .thenReturn(ResponseEntity.noContent().build());
+    }
+
+    @Description("최근 1시간 동안 좋아요 증가 TOP 10 조회 API")
+    @GetMapping("/songs/top-liked")
+    public Flux<SongLikeCountDto> topLiked() {
+
+        return musicService.getTop10InLastHour();
     }
 }

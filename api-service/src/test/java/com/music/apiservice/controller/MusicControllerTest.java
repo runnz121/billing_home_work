@@ -1,6 +1,7 @@
 package com.music.apiservice.controller;
 
 import com.music.apiservice.controller.response.AlbumCountResponse;
+import com.music.apiservice.model.dto.SongLikeCountDto;
 import com.music.apiservice.service.MusicService;
 import com.music.apiservice.testUtils.TestUtils;
 import org.junit.jupiter.api.Test;
@@ -9,6 +10,7 @@ import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -87,5 +89,48 @@ class MusicControllerTest {
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().is5xxServerError();
+    }
+
+    @Test
+    void 최근1시간_좋아요증가_TOP10_조회_API_호출_성공() {
+
+        SongLikeCountDto dto1 = new SongLikeCountDto(101L, 50L);
+        SongLikeCountDto dto2 = new SongLikeCountDto(202L, 30L);
+
+        when(musicService.getTop10InLastHour())
+                .thenReturn(Flux.just(dto1, dto2));
+
+        webClient.get()
+                .uri("/api/songs/top-liked")
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus().isOk()
+                .expectHeader().contentType(MediaType.APPLICATION_JSON)
+                .expectBodyList(SongLikeCountDto.class)
+                .hasSize(2)
+                .value(list -> {
+                    // dto1
+                    assertThat(list.get(0).songId()).isEqualTo(101L);
+                    assertThat(list.get(0).count()).isEqualTo(50L);
+
+                    // dto2
+                    assertThat(list.get(1).songId()).isEqualTo(202L);
+                    assertThat(list.get(1).count()).isEqualTo(30L);
+                });
+    }
+
+    @Test
+    void 최근1시간_좋아요증가_TOP10_조회_API_결과없을때_빈리스트반환() {
+
+        when(musicService.getTop10InLastHour())
+                .thenReturn(Flux.empty());
+
+        webClient.get()
+                .uri("/api/songs/top-liked")
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBodyList(SongLikeCountDto.class)
+                .hasSize(0);
     }
 }
