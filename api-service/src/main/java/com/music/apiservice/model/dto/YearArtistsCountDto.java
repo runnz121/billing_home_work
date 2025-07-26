@@ -13,4 +13,11 @@ public record YearArtistsCountDto(
         @Description("아티스트별 앨범 갯수")
         Long albumCounts
 ) {
+
+        public static YearArtistsCountDto of(Long artistId,
+                                             String artistName,
+                                             Long albumCounts) {
+
+                return new YearArtistsCountDto(artistId, artistName, albumCounts);
+        }
 }
