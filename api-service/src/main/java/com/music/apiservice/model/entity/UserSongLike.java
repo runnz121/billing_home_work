@@ -36,4 +36,15 @@ public class UserSongLike {
                 .songId(songId)
                 .build();
     }
+
+    public static UserSongLike of(Long userId,
+                                  Long songId,
+                                  LocalDateTime likedAt) {
+
+        return UserSongLike.builder()
+                .userId(userId)
+                .songId(songId)
+                .likedAt(likedAt)
+                .build();
+    }
 }
