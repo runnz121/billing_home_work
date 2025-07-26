@@ -3,6 +3,7 @@ package com.music.apiservice.service;
 import com.music.apiservice.controller.response.AlbumCountResponse;
 import com.music.apiservice.exception.CustomException;
 import com.music.apiservice.exception.error.LikeError;
+import com.music.apiservice.model.dto.SongLikeCountDto;
 import com.music.apiservice.model.dto.YearArtistsCountDto;
 import com.music.apiservice.repository.AlbumRepository;
 import com.music.apiservice.repository.SongRepository;
@@ -158,5 +159,34 @@ class MusicServiceTest {
                             .isEqualTo(LikeError.ALREADY_LIKE_ERROR);
                 })
                 .verify();
+    }
+
+    @Test
+    void 최근1시간_좋아요증가_TOP10_조회_결과가_있으면_반환한다() {
+
+        SongLikeCountDto dto1 = new SongLikeCountDto(1L, 5L);
+        SongLikeCountDto dto2 = new SongLikeCountDto(2L, 3L);
+
+        when(songRepository.findTop10InLastHour())
+                .thenReturn(Flux.just(dto1, dto2));
+
+        Flux<SongLikeCountDto> result = musicService.getTop10InLastHour();
+
+        StepVerifier.create(result)
+                .expectNext(dto1)
+                .expectNext(dto2)
+                .verifyComplete();
+    }
+
+    @Test
+    void 최근1시간_좋아요증가_TOP10_조회_결과가_없으면_빈_리스트를_반환한다() {
+
+        when(songRepository.findTop10InLastHour())
+                .thenReturn(Flux.empty());
+
+        Flux<SongLikeCountDto> result = musicService.getTop10InLastHour();
+
+        StepVerifier.create(result)
+                .verifyComplete();
     }
 }

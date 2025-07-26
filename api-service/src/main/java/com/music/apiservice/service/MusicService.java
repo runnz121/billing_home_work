@@ -3,6 +3,7 @@ package com.music.apiservice.service;
 import com.music.apiservice.controller.response.AlbumCountResponse;
 import com.music.apiservice.exception.CustomException;
 import com.music.apiservice.exception.error.LikeError;
+import com.music.apiservice.model.dto.SongLikeCountDto;
 import com.music.apiservice.model.dto.YearArtistsCountDto;
 import com.music.apiservice.model.entity.UserSongLike;
 import com.music.apiservice.repository.AlbumRepository;
@@ -13,6 +14,7 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.reactive.TransactionalOperator;
 import reactor.core.publisher.Mono;
+import reactor.core.publisher.Flux;
 
 import java.util.List;
 
@@ -55,5 +57,10 @@ public class MusicService {
                 .onErrorMap(DuplicateKeyException.class,
                         ex -> new CustomException(LikeError.ALREADY_LIKE_ERROR))
                 .then();
+    }
+
+    public Flux<SongLikeCountDto> getTop10InLastHour() {
+
+        return songRepository.findTop10InLastHour();
     }
 }
