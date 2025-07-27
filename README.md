@@ -11,6 +11,7 @@
 ## 추가 적용사항
 - **docker-compose** API‑service & batch‑app 모두 동일한 MySQL 컨테이너를 사용하도록 구성하였습니다.
 - **Testcontainer** 적용하여 테스트 수행시 컨테이너 환경에서 수행되도록 설정하였습니다. (batch-app 스프링 배치 job 테스트)
+- **Swagger** 추가하였습니다. (http://localhost:8080/music/webjars/swagger-ui/index.html) (api-service)
 
 ---
 

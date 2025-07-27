@@ -27,6 +27,9 @@ dependencies {
     testImplementation 'org.springframework.restdocs:spring-restdocs-webtestclient'
     testImplementation 'io.projectreactor:reactor-test'
     testImplementation 'io.r2dbc:r2dbc-h2'
+
+    // open api 의존성 추가
+    implementation 'org.springdoc:springdoc-openapi-starter-webflux-ui:2.5.0'
 }
 
 tasks.named('test') {

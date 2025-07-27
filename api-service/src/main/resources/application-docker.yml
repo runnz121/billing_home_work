@@ -16,3 +16,10 @@ logging:
   level:
     org.springframework.r2dbc: DEBUG
     io.r2dbc.pool: DEBUG
+
+springdoc:
+  swagger-ui:
+    path: /music/swagger-ui.html
+  api-docs:
+    path: /music
+  override-with-generic-response: false
