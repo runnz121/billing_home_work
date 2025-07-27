@@ -1,0 +1,69 @@
+-- artists
+CREATE TABLE artists (
+    id         BIGINT        NOT NULL AUTO_INCREMENT,
+    name       VARCHAR(2000) NOT NULL,
+    name_hash  CHAR(32)      NOT NULL,
+
+    PRIMARY KEY (id),
+    UNIQUE KEY uq_artists_name_hash (name_hash)
+
+) DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_unicode_ci;
+
+
+-- album
+CREATE TABLE album (
+    id            BIGINT       NOT NULL AUTO_INCREMENT,
+    artist_id     BIGINT       NOT NULL,
+    title         VARCHAR(2000)    NULL,
+    title_hash    CHAR(32)         NULL,
+    released_at   DATE             NULL,
+    released_year INT              NULL,
+
+    PRIMARY KEY (id),
+    UNIQUE KEY uq_album_artist_title (artist_id, title_hash),
+
+    INDEX idx_album_artist (artist_id),
+    INDEX idx_album_release_year (released_year),
+    INDEX idx_album_year_artist (released_year, artist_id),
+
+    CONSTRAINT fk_album_artist FOREIGN KEY (artist_id) REFERENCES artists(id)
+) DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_unicode_ci;
+
+
+-- song
+CREATE TABLE song (
+    id            BIGINT         NOT NULL AUTO_INCREMENT,
+    album_id      BIGINT         NOT NULL,
+    title         VARCHAR(2000)      NULL,
+    title_hash    CHAR(32)           NULL,
+    like_count    BIGINT             NOT NULL DEFAULT 0,
+
+    PRIMARY KEY (id),
+    UNIQUE KEY uq_song_album_title (album_id, title_hash),
+
+    INDEX idx_song_album (album_id),
+
+    CONSTRAINT fk_song_album
+       FOREIGN KEY (album_id) REFERENCES album(id)
+) DEFAULT CHARSET=utf8mb4
+  COLLATE=utf8mb4_unicode_ci;
+
+
+-- user_song_like
+CREATE TABLE user_song_like (
+    id         BIGINT     NOT NULL AUTO_INCREMENT,
+    user_id    BIGINT     NOT NULL,
+    song_id    BIGINT     NOT NULL,
+    liked_at   TIMESTAMP  NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    PRIMARY KEY (id),
+    UNIQUE KEY uq_user_song (user_id, song_id),
+
+    INDEX idx_usl_user (user_id),
+    INDEX idx_usl_liked_at_song (liked_at, song_id),
+
+    CONSTRAINT fk_usl_song FOREIGN KEY (song_id) REFERENCES song(id)
+) DEFAULT CHARSET=utf8mb4
+  COLLATE=utf8mb4_unicode_ci;
