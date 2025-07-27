@@ -30,6 +30,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.util.StringUtils;
 
 import javax.sql.DataSource;
+import java.time.LocalDate;
 
 @Configuration
 @RequiredArgsConstructor
@@ -138,11 +139,14 @@ public class SongDataIngestBatchJobConfig {
             String artistHash = HashUtils.toHash(dto.getArtist());
             String titleHash = HashUtils.toHash(dto.getAlbum());
 
+            LocalDate releasedDate = DateUtils.toLocalDate(dto.getReleaseDate());
+
             return Album.builder()
                     .artistHash(artistHash)
                     .title(dto.getAlbum())
                     .titleHash(titleHash)
-                    .releaseDate(DateUtils.toLocalDate(dto.getReleaseDate()))
+                    .releaseDate(releasedDate)
+                    .releaseYear(releasedDate.getYear())
                     .build();
         };
     }
@@ -158,13 +162,15 @@ public class SongDataIngestBatchJobConfig {
                               artist_id,
                               title,
                               title_hash,
-                              release_dt
+                              released_at,
+                              released_year
                             )
                             VALUES (
                               (SELECT id FROM artists WHERE name_hash = :artistHash),
                               :title,
                               :titleHash,
-                              :releaseDate
+                              :releaseDate,
+                              :releaseYear
                             )
                             ON DUPLICATE KEY UPDATE
                               id = id
