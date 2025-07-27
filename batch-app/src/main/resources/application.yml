@@ -11,7 +11,7 @@ spring:
       initialize-schema: always
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    jdbc-url: jdbc:mysql://localhost:3306/kakao?autoReconnect=true
+    jdbc-url: jdbc:mysql://localhost:3306/music?autoReconnect=true
     username: root
     password: 698427
 
