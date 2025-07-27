@@ -21,7 +21,7 @@ public interface SongRepository extends ReactiveCrudRepository<Song, Long> {
     Mono<Long> incrementLikeCount(Long songId);
 
     @Query("""
-            SELECT song_id    AS songId
+            SELECT song_id    AS song_id
                  , COUNT(*)   AS count
               FROM user_song_like
              WHERE liked_at >= TIMESTAMPADD(HOUR, -1, CURRENT_TIMESTAMP())
