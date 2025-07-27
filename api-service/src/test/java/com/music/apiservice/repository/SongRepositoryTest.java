@@ -85,6 +85,16 @@ class SongRepositoryTest {
                 .verifyComplete();
     }
 
+    @Test
+    void 조건에맞는좋아요없으면_빈리스트반환하는지_확인하는_테스트() {
+
+        StepVerifier.create(TestTransactionUtils.withRollBack(
+                        songRepository.findTop10InLastHour().collectList()
+                ))
+                .assertNext(list -> assertThat(list).isEmpty())
+                .verifyComplete();
+    }
+
     private Mono<Void> getSongs(LocalDateTime now) {
 
         Mono<Void> song1 = createTestSong("A1", "Album1", "S1")
@@ -99,26 +109,22 @@ class SongRepositoryTest {
                 ).then();
 
         Mono<Void> song3 = createTestSong("A3", "Album3", "S3")
-                .flatMap(song -> Flux.just(
+                .flatMap(song -> Flux.zip(
+                                Flux.just(31L, 32L, 33L),
+                                Flux.just(
                                         now.minusHours(2),
                                         now.minusHours(3),
                                         now.minusHours(4)
-                                )
-                                .flatMap(dt -> userSongLikeRepository.save(UserSongLike.of(31L, song.getId(), dt)))
-                                .then()
+                                ))
+                        .flatMap(tuple -> {
+                            Long userId = tuple.getT1();
+                            LocalDateTime likedAt = tuple.getT2();
+                            return userSongLikeRepository.save(UserSongLike.of(userId, song.getId(), likedAt));
+                        })
+                        .then()
                 );
 
         return Mono.when(song1, song2, song3);
-    }
-
-    @Test
-    void 조건에맞는좋아요없으면_빈리스트반환하는지_확인하는_테스트() {
-
-        StepVerifier.create(TestTransactionUtils.withRollBack(
-                        songRepository.findTop10InLastHour().collectList()
-                ))
-                .assertNext(list -> assertThat(list).isEmpty())
-                .verifyComplete();
     }
 
     private Mono<Song> createTestSong(String artistHash,
