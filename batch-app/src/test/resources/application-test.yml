@@ -15,7 +15,7 @@ spring:
 
 batch:
   resource:
-    location: classpath:/spotifyDataset-test.json
+    location: classpath:/musicDataset-test.json
 
 logging:
   level:
