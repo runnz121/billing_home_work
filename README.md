@@ -6,7 +6,7 @@
 ## 실행방법
 - Active profiles : docker 로 설정합니다 (batch-app, api-service 모두 적용)
 - 프로젝트 root path 에서(docker-compose.yml 파일 위치) docker-compose up -d 로 DB 컨테이너 환경을 로드 합니다.
-
+- 배치 실행시 /resources/musicDateset.json 이름으로 파일이 존재해야합니다
 ---
 
 ## 추가 적용사항
