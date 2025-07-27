@@ -1,5 +1,6 @@
 # 과제 구현 설명서
 ### 작성자 : 박종빈
+### 깃허브 리포지토리 : https://github.com/runnz121/billing_home_work
 
 ---
 ## 실행방법
