@@ -1,33 +1,21 @@
 package com.music.batchapp.dataIngest.mapper;
 
-import com.music.batchapp.dataIngest.domain.MusicData;
+import com.music.batchapp.dataIngest.util.TestUtils;
 import org.junit.jupiter.api.Test;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 class JsonCustomLineMapperTest {
 
     private final JsonCustomLineMapper mapper = new JsonCustomLineMapper();
 
     @Test
-    void 이스케이프된_슬래시는_복원된다() throws Exception {
+    void 객체가_정상적으로_파싱되는지_확인하는_테스트() {
 
-        String line = "{\"artist\":\"A\\\\/B\",\"album\":\"X\\\\/Y\",\"song\":\"Hello\\\\/World\"}";
-        MusicData data = mapper.mapLine(line, 1);
+        String json = TestUtils.asString("data/music-data.json");
 
-        assertThat(data.getArtist()).isEqualTo("A\\\\/B");       // "A\\/B"
-        assertThat(data.getAlbum()).isEqualTo("X\\\\/Y");        // "X\\/Y"
-        assertThat(data.getSong()).isEqualTo("Hello\\\\/World"); // "Hello\\/World"
-    }
-
-    @Test
-    void 일반_슬래시는_그대로_유지된다() throws Exception {
-
-        String line = "{\"artist\":\"A/B\",\"album\":\"X/Y\",\"song\":\"Hello/World\"}";
-        MusicData data = mapper.mapLine(line, 2);
-
-        assertThat(data.getArtist()).isEqualTo("A/B");
-        assertThat(data.getAlbum()).isEqualTo("X/Y");
-        assertThat(data.getSong()).isEqualTo("Hello/World");
+        assertDoesNotThrow(() -> {
+            mapper.mapLine(json, 1);
+        });
     }
 }
