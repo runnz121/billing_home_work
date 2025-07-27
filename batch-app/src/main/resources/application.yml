@@ -14,6 +14,10 @@ spring:
     jdbc-url: jdbc:mysql://localhost:3306/music?autoReconnect=true
     username: root
     password: 698427
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:sql/schema.sql
 
 batch:
   resource:
